@@ -6,5 +6,6 @@ edition = "2021"
 [dependencies]
 goose = "0.17"
 goose-eggs = "0.5"
+lazy_static = "1.4"
 reqwest = "0.11.27"
 tokio = { version = "1", features = ["full", "rt-multi-thread", "macros"] }
