@@ -196,8 +196,6 @@ async fn create_tms_key(user: &mut GooseUser) -> TransactionResult {
     };
     //println!("{:#?}", goose_resp);
 
-    user.set_session_data(data);
-
     Ok(())
 }
 
