@@ -4,10 +4,11 @@ use std::env;
 use std::collections::HashMap;
 
 use lazy_static::lazy_static;
+use serde_json::json;
 
 use goose::prelude::*;
 use goose::goose::GooseMethod;
-use reqwest::header::HeaderMap;
+use reqwest::{header::HeaderMap, Body};
 
 // ***************************************************************************
 //                             Static Variables
@@ -36,6 +37,9 @@ async fn main() -> Result<(), GooseError> {
     GooseAttack::initialize()?
         .register_scenario(scenario!("getclient")
             .register_transaction(transaction!(get_tms_client))
+        )
+        .register_scenario(scenario!("createkey")
+            .register_transaction(transaction!(create_tms_key))
         )
         .register_scenario(scenario!("getversion")
             .register_transaction(transaction!(get_tms_version))
@@ -118,6 +122,81 @@ async fn get_tms_client(user: &mut GooseUser) -> TransactionResult {
         }
     };
     //println!("{:#?}", goose_resp);
+
+    Ok(())
+}
+
+// ------------------------------------------------------------------------------
+// create_tms_key:
+// ------------------------------------------------------------------------------
+/// A very simple transaction that simply retrieves version information.
+async fn create_tms_key(user: &mut GooseUser) -> TransactionResult {
+    // Get custom settings from the environment.
+    let env_vars = &RUNTIME_CTX.env_vars;
+    let verbose = env_vars.get(TMS_VERBOSE).unwrap();
+    let parse_response = env_vars.get(TMS_PARSE_RESPONSE).unwrap();
+
+    // TMS inputs.
+    let tenant = env_vars.get(X_TMS_TENANT)
+        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_TENANT));
+    let client_id = env_vars.get(X_TMS_CLIENT_ID)
+        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_CLIENT_ID));
+    let client_secret = env_vars.get(X_TMS_CLIENT_SECRET)
+        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_CLIENT_SECRET));
+
+    // Set the headers needed to issue the get_client call.
+    let mut headers = HeaderMap::new();
+    headers.insert("X-TMS-TENANT", tenant.parse().unwrap());
+    headers.insert("X-TMS-CLIENT-ID", client_id.parse().unwrap());
+    headers.insert("X-TMS-CLIENT-SECRET", client_secret.parse().unwrap());
+    headers.insert("Content-Type", "application/json".parse().unwrap());
+    headers.insert("Accept", "application/json".parse().unwrap());
+    // headers.insert("Connection", "keep-alive".parse().unwrap());
+
+    // Assemble the body of the post request.
+    let json = json!({
+        "client_user_id": "testuser1", 
+        "host": "testhost1", 
+        "host_account": "testhostaccount1",
+        "num_uses": -1, 
+        "ttl_minutes": -1, 
+        "key_type": ""
+    });
+    let body = Body::from(json.to_string());
+
+    // Use the user parameter to generate a reqwest RequestBuilder tailored to the
+    // method and targeing our server.
+    let reqbuilder = user.get_request_builder(&GooseMethod::Post, 
+                                                              "v1/tms/pubkeys/creds")?;
+
+    // Incorporate the lower level reqwest builder into a GooseRequest.
+    let goose_request = GooseRequest::builder()
+        // Acquire the headers.
+        .set_request_builder(reqbuilder.headers(headers).body(body))
+        // Build the GooseRequest object.
+        .build();
+
+    // Use the user parameter to send the GooseRequest and capture response.
+    match user.request(goose_request).await?.response {
+        Ok(r) => {
+            if parse_response != "false" {
+                match r.text().await {
+                    Ok(content) => {
+                        if verbose != "false" {println!("*** Pubkey: {}", content);}
+                    },
+                    Err(e) => {
+                        return TransactionResult::Err(Box::new(TransactionError::Reqwest(e)));
+                    }
+                };
+            }
+        },
+        Err(e) => {
+            return TransactionResult::Err(Box::new(TransactionError::Reqwest(e)));
+        }
+    };
+    //println!("{:#?}", goose_resp);
+
+    user.set_session_data(data);
 
     Ok(())
 }

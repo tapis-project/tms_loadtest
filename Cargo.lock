@@ -1513,6 +1513,9 @@ dependencies = [
  "goose-eggs",
  "lazy_static",
  "reqwest",
+ "serde",
+ "serde_derive",
+ "serde_json",
  "tokio",
 ]
 
