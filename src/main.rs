@@ -4,7 +4,7 @@ use std::env;
 use std::collections::HashMap;
 
 use lazy_static::lazy_static;
-use serde_json::json;
+use serde_json::{json, Map, Value};
 
 use goose::prelude::*;
 use goose::goose::GooseMethod;
@@ -44,6 +44,9 @@ async fn main() -> Result<(), GooseError> {
         .register_scenario(scenario!("getversion")
             .register_transaction(transaction!(get_tms_version))
         )
+        .register_scenario(scenario!("getkey")
+            .register_transaction(transaction!(get_tms_key))
+        )
         .execute()
         .await?;
 
@@ -61,6 +64,11 @@ const X_TMS_ADMIN_ID: &str = "X_TMS_ADMIN_ID";
 const X_TMS_ADMIN_SECRET: &str = "X_TMS_ADMIN_SECRET";
 const TMS_VERBOSE: &str = "TMS_VERBOSE";                  // default is false
 const TMS_PARSE_RESPONSE: &str = "TMS_PARSE_RESPONSE";    // default is false 
+const TMS_PUBKEY_FINGERPRINT: &str = "TMS_PUBKEY_FINGERPRINT";
+const TMS_PUBKEY_KEYTYPE: &str = "TMS_PUBKEY_KEYTYPE";
+const TMS_PUBKEY_USER: &str = "TMS_PUBKEY_USER";
+const TMS_PUBKEY_USERID: &str = "TMS_PUBKEY_USERID";
+const TMS_PUBKEY_HOST: &str = "TMS_PUBKEY_HOST";
 
 // ******************************************************************************
 //                           Transaction Functions
@@ -92,7 +100,7 @@ async fn get_tms_client(user: &mut GooseUser) -> TransactionResult {
     headers.insert("Content-Type", "application/json".parse().unwrap());
 
     // Use the user parameter to generate a reqwest RequestBuilder tailored to the
-    // method and targeing our server.
+    // method and targeting our server.
     let reqbuilder = user.get_request_builder(&GooseMethod::Get, 
                                                         "v1/tms/client/testclient1")?;
     
@@ -129,7 +137,7 @@ async fn get_tms_client(user: &mut GooseUser) -> TransactionResult {
 // ------------------------------------------------------------------------------
 // create_tms_key:
 // ------------------------------------------------------------------------------
-/// A very simple transaction that simply retrieves version information.
+/// Transaction to create an ssh keypair for the user
 async fn create_tms_key(user: &mut GooseUser) -> TransactionResult {
     // Get custom settings from the environment.
     let env_vars = &RUNTIME_CTX.env_vars;
@@ -154,6 +162,7 @@ async fn create_tms_key(user: &mut GooseUser) -> TransactionResult {
     // headers.insert("Connection", "keep-alive".parse().unwrap());
 
     // Assemble the body of the post request.
+    // TODO vary the client, host and host_account values based on user number
     let json = json!({
         "client_user_id": "testuser1", 
         "host": "testhost1", 
@@ -165,7 +174,7 @@ async fn create_tms_key(user: &mut GooseUser) -> TransactionResult {
     let body = Body::from(json.to_string());
 
     // Use the user parameter to generate a reqwest RequestBuilder tailored to the
-    // method and targeing our server.
+    // method and targeting our server.
     let reqbuilder = user.get_request_builder(&GooseMethod::Post, 
                                                               "v1/tms/pubkeys/creds")?;
 
@@ -229,6 +238,91 @@ async fn get_tms_version(user: &mut GooseUser) -> TransactionResult {
             println!("*** Error: {}", e);
         }
     }
+
+    Ok(())
+}
+
+// ------------------------------------------------------------------------------
+// get_tms_key:
+// ------------------------------------------------------------------------------
+// Get ssh keypair for a user
+// Public key fingerprint, user, userid and keytype must be provided in env variables
+async fn get_tms_key(user: &mut GooseUser) -> TransactionResult {
+    // Get custom settings from the environment.
+    let env_vars = &RUNTIME_CTX.env_vars;
+    let verbose = env_vars.get(TMS_VERBOSE).unwrap();
+    let parse_response = env_vars.get(TMS_PARSE_RESPONSE).unwrap();
+
+    // TMS inputs.
+    let pubkey_fingerprint = env_vars.get(TMS_PUBKEY_FINGERPRINT)
+    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_FINGERPRINT));
+    let pubkey_host = env_vars.get(TMS_PUBKEY_HOST)
+    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_HOST));
+    let pubkey_user = env_vars.get(TMS_PUBKEY_USER)
+    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_USER));
+    let pubkey_userid = env_vars.get(TMS_PUBKEY_USERID)
+    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_USER));
+    let pubkey_keytype = env_vars.get(TMS_PUBKEY_KEYTYPE)
+    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_KEYTYPE));
+
+    let tenant = env_vars.get(X_TMS_TENANT)
+        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_TENANT));
+    let client_id = env_vars.get(X_TMS_CLIENT_ID)
+        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_CLIENT_ID));
+    let client_secret = env_vars.get(X_TMS_CLIENT_SECRET)
+        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_CLIENT_SECRET));
+
+    // Set the headers needed to issue the get_client call.
+    let mut headers = HeaderMap::new();
+    headers.insert("X-TMS-TENANT", tenant.parse().unwrap());
+    headers.insert("X-TMS-CLIENT-ID", client_id.parse().unwrap());
+    headers.insert("X-TMS-CLIENT-SECRET", client_secret.parse().unwrap());
+    headers.insert("Content-Type", "application/json".parse().unwrap());
+    headers.insert("Accept", "application/json".parse().unwrap());
+    // headers.insert("Connection", "keep-alive".parse().unwrap());
+
+    // Assemble the body of the post request.
+    let mut map = Map::new();
+    map.insert("user".to_string(), Value::String(pubkey_user.to_string()));
+    map.insert("user_uid".to_string(), Value::String(pubkey_userid.to_string()));
+    map.insert("user".to_string(), Value::String(pubkey_keytype.to_string()));
+    map.insert("host".to_string(), Value::String(pubkey_host.to_string()));
+    map.insert("public_key_fingerprint".to_string(), Value::String(pubkey_fingerprint.to_string()));
+
+    let json_obj = Value::Object(map);
+    let body = Body::from(json_obj.to_string());
+
+    // Use the user parameter to generate a reqwest RequestBuilder tailored to the
+    // method and targeting our server.
+    let reqbuilder = user.get_request_builder(&GooseMethod::Post, 
+                                                              "v1/tms/pubkeys/creds/retrieve")?;
+
+    // Incorporate the lower level reqwest builder into a GooseRequest.
+    let goose_request = GooseRequest::builder()
+        // Acquire the headers.
+        .set_request_builder(reqbuilder.headers(headers).body(body))
+        // Build the GooseRequest object.
+        .build();
+
+    // Use the user parameter to send the GooseRequest and capture response.
+    match user.request(goose_request).await?.response {
+        Ok(r) => {
+            if parse_response != "false" {
+                match r.text().await {
+                    Ok(content) => {
+                        if verbose != "false" {println!("*** Pubkey: {}", content);}
+                    },
+                    Err(e) => {
+                        return TransactionResult::Err(Box::new(TransactionError::Reqwest(e)));
+                    }
+                };
+            }
+        },
+        Err(e) => {
+            return TransactionResult::Err(Box::new(TransactionError::Reqwest(e)));
+        }
+    };
+    //println!("{:#?}", goose_resp);
 
     Ok(())
 }
