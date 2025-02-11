@@ -265,18 +265,8 @@ async fn get_tms_key(user: &mut GooseUser) -> TransactionResult {
     let pubkey_keytype = env_vars.get(TMS_PUBKEY_KEYTYPE)
     .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_KEYTYPE));
 
-    let tenant = env_vars.get(X_TMS_TENANT)
-        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_TENANT));
-    let client_id = env_vars.get(X_TMS_CLIENT_ID)
-        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_CLIENT_ID));
-    let client_secret = env_vars.get(X_TMS_CLIENT_SECRET)
-        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", X_TMS_CLIENT_SECRET));
-
     // Set the headers needed to issue the get_client call.
     let mut headers = HeaderMap::new();
-    headers.insert("X-TMS-TENANT", tenant.parse().unwrap());
-    headers.insert("X-TMS-CLIENT-ID", client_id.parse().unwrap());
-    headers.insert("X-TMS-CLIENT-SECRET", client_secret.parse().unwrap());
     headers.insert("Content-Type", "application/json".parse().unwrap());
     headers.insert("Accept", "application/json".parse().unwrap());
     // headers.insert("Connection", "keep-alive".parse().unwrap());
