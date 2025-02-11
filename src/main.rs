@@ -65,7 +65,7 @@ const X_TMS_ADMIN_SECRET: &str = "X_TMS_ADMIN_SECRET";
 const TMS_VERBOSE: &str = "TMS_VERBOSE";                  // default is false
 const TMS_PARSE_RESPONSE: &str = "TMS_PARSE_RESPONSE";    // default is false 
 const TMS_PUBKEY_FINGERPRINT: &str = "TMS_PUBKEY_FINGERPRINT";
-const TMS_PUBKEY_KEYTYPE: &str = "TMS_PUBKEY_KEYTYPE";
+const TMS_PUBKEY_KEYTYPE: &str = "TMS_PUBKEY_KEYTYPE"; // default is ssh-ed25519
 const TMS_PUBKEY_USER: &str = "TMS_PUBKEY_USER";
 const TMS_PUBKEY_USERID: &str = "TMS_PUBKEY_USERID";
 const TMS_PUBKEY_HOST: &str = "TMS_PUBKEY_HOST";
@@ -255,13 +255,13 @@ async fn get_tms_key(user: &mut GooseUser) -> TransactionResult {
 
     // TMS inputs.
     let pubkey_fingerprint = env_vars.get(TMS_PUBKEY_FINGERPRINT)
-    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_FINGERPRINT));
+        .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_FINGERPRINT));
     let pubkey_host = env_vars.get(TMS_PUBKEY_HOST)
     .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_HOST));
     let pubkey_user = env_vars.get(TMS_PUBKEY_USER)
     .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_USER));
     let pubkey_userid = env_vars.get(TMS_PUBKEY_USERID)
-    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_USER));
+    .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_USERID));
     let pubkey_keytype = env_vars.get(TMS_PUBKEY_KEYTYPE)
     .unwrap_or_else(|| panic!("* FATAL ERROR: Required environment variable '{}' is not set.", TMS_PUBKEY_KEYTYPE));
 
@@ -383,6 +383,24 @@ fn get_env_vars() -> HashMap<&'static str, String> {
     let val = env::var(TMS_PARSE_RESPONSE).unwrap_or_else(
                                 |_| {"false".to_string()});
     env_map.insert(TMS_PARSE_RESPONSE, val);
+
+    // ----- TMS getkey settings
+    let val = env::var(TMS_PUBKEY_USER).unwrap_or_else(
+        |_| {"".to_string()});
+    if !val.is_empty() {env_map.insert(TMS_PUBKEY_USER, val);}
+    let val = env::var(TMS_PUBKEY_USERID).unwrap_or_else(
+        |_| {"".to_string()});
+    if !val.is_empty() {env_map.insert(TMS_PUBKEY_USERID, val);}
+    let val = env::var(TMS_PUBKEY_HOST).unwrap_or_else(
+        |_| {"".to_string()});
+    if !val.is_empty() {env_map.insert(TMS_PUBKEY_HOST, val);}
+    let val = env::var(TMS_PUBKEY_KEYTYPE).unwrap_or_else(
+        |_| {"ssh-ed25519".to_string()});
+    if !val.is_empty() {env_map.insert(TMS_PUBKEY_KEYTYPE, val);}
+    let val = env::var(TMS_PUBKEY_FINGERPRINT).unwrap_or_else(
+        |_| {"".to_string()});
+    if !val.is_empty() {env_map.insert(TMS_PUBKEY_FINGERPRINT, val);}
+
 
     // Always output the environment settings.
     // NOTE: Secrets are printed out!
