@@ -268,8 +268,7 @@ async fn get_tms_key(user: &mut GooseUser) -> TransactionResult {
     // Set the headers needed to issue the get_client call.
     let mut headers = HeaderMap::new();
     headers.insert("Content-Type", "application/json".parse().unwrap());
-    headers.insert("Accept", "application/json".parse().unwrap());
-    // headers.insert("Connection", "keep-alive".parse().unwrap());
+//    headers.insert("Accept", "application/json".parse().unwrap());
 
     // Assemble the body of the post request.
     let mut map = Map::new();
