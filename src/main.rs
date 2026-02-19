@@ -274,11 +274,12 @@ async fn get_tms_key(user: &mut GooseUser) -> TransactionResult {
     let mut map = Map::new();
     map.insert("user".to_string(), Value::String(pubkey_user.to_string()));
     map.insert("user_uid".to_string(), Value::String(pubkey_userid.to_string()));
-    map.insert("user".to_string(), Value::String(pubkey_keytype.to_string()));
+    map.insert("keytype".to_string(), Value::String(pubkey_keytype.to_string()));
     map.insert("host".to_string(), Value::String(pubkey_host.to_string()));
     map.insert("public_key_fingerprint".to_string(), Value::String(pubkey_fingerprint.to_string()));
 
     let json_obj = Value::Object(map);
+    if verbose != "false" {println!("*** Json request body: {}", json_obj);}
     let body = Body::from(json_obj.to_string());
 
     // Use the user parameter to generate a reqwest RequestBuilder tailored to the
