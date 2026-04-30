@@ -1,0 +1,33 @@
+Run folder: loadtest_results/202604291329
+Total runs: 28
+
+[PASS] smoke/getversion users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202604291329/smoke/getversion_u1_i100.log
+[PASS] smoke/getclient users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202604291329/smoke/getclient_u1_i100.log
+[PASS] smoke/getkey users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202604291329/smoke/getkey_u1_i100.log
+[PASS] smoke/createkey users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202604291329/smoke/createkey_u1_i100.log
+[PASS] ladder/getversion users=1, iters=1000 reqs=1000 fails=0  log=loadtest_results/202604291329/ladder/getversion_u1_i1000.log
+[PASS] ladder/getversion users=5, iters=1000 reqs=5000 fails=0  log=loadtest_results/202604291329/ladder/getversion_u5_i1000.log
+[PASS] ladder/getversion users=10, iters=1000 reqs=10000 fails=0  log=loadtest_results/202604291329/ladder/getversion_u10_i1000.log
+[PASS] ladder/getversion users=25, iters=1000 reqs=25000 fails=0  log=loadtest_results/202604291329/ladder/getversion_u25_i1000.log
+[PASS] ladder/getversion users=50, iters=1000 reqs=50000 fails=0  log=loadtest_results/202604291329/ladder/getversion_u50_i1000.log
+[PASS] ladder/getversion users=100, iters=1000 reqs=100000 fails=0  log=loadtest_results/202604291329/ladder/getversion_u100_i1000.log
+[PASS] ladder/getclient users=1, iters=1000 reqs=1000 fails=0  log=loadtest_results/202604291329/ladder/getclient_u1_i1000.log
+[PASS] ladder/getclient users=5, iters=1000 reqs=5000 fails=0  log=loadtest_results/202604291329/ladder/getclient_u5_i1000.log
+[PASS] ladder/getclient users=10, iters=1000 reqs=10000 fails=0  log=loadtest_results/202604291329/ladder/getclient_u10_i1000.log
+[PASS] ladder/getclient users=25, iters=1000 reqs=25000 fails=0  log=loadtest_results/202604291329/ladder/getclient_u25_i1000.log
+[PASS] ladder/getclient users=50, iters=1000 reqs=50000 fails=0  log=loadtest_results/202604291329/ladder/getclient_u50_i1000.log
+[PASS] ladder/getclient users=100, iters=1000 reqs=100000 fails=0  log=loadtest_results/202604291329/ladder/getclient_u100_i1000.log
+[PASS] ladder/getkey users=1, iters=1000 reqs=1000 fails=0  log=loadtest_results/202604291329/ladder/getkey_u1_i1000.log
+[PASS] ladder/getkey users=5, iters=1000 reqs=5000 fails=0  log=loadtest_results/202604291329/ladder/getkey_u5_i1000.log
+[PASS] ladder/getkey users=10, iters=1000 reqs=10000 fails=0  log=loadtest_results/202604291329/ladder/getkey_u10_i1000.log
+[PASS] ladder/getkey users=25, iters=1000 reqs=25000 fails=0  log=loadtest_results/202604291329/ladder/getkey_u25_i1000.log
+[PASS] ladder/getkey users=50, iters=1000 reqs=50000 fails=0  log=loadtest_results/202604291329/ladder/getkey_u50_i1000.log
+[PASS] ladder/getkey users=100, iters=1000 reqs=100000 fails=0  log=loadtest_results/202604291329/ladder/getkey_u100_i1000.log
+[PASS] ladder/createkey users=1, iters=1000 reqs=1000 fails=0  log=loadtest_results/202604291329/ladder/createkey_u1_i1000.log
+[PASS] ladder/createkey users=5, iters=1000 reqs=5000 fails=0  log=loadtest_results/202604291329/ladder/createkey_u5_i1000.log
+[PASS] ladder/createkey users=10, iters=1000 reqs=10000 fails=0  log=loadtest_results/202604291329/ladder/createkey_u10_i1000.log
+[PASS] ladder/createkey users=25, iters=1000 reqs=25000 fails=0  log=loadtest_results/202604291329/ladder/createkey_u25_i1000.log
+[PASS] ladder/createkey users=50, iters=1000 reqs=50000 fails=0  log=loadtest_results/202604291329/ladder/createkey_u50_i1000.log
+[PASS] ladder/createkey users=100, iters=1000 reqs=100000 fails=0  log=loadtest_results/202604291329/ladder/createkey_u100_i1000.log
+
+OVERALL: PASS

@@ -1,0 +1,146 @@
+Starting tms_loadtest
+18:29:46 [INFO] Output verbosity level: INFO
+18:29:46 [INFO] Logfile verbosity level: WARN
+18:29:46 [INFO] users = 10
+18:29:46 [INFO] iterations = 1000
+18:29:46 [INFO] scenarios = Scenarios { active: ["getversion"] }
+18:29:46 [INFO] global host configured: https://tms-server-dev.tacc.utexas.edu:3000
+18:29:46 [INFO] allocating transactions and scenarios with RoundRobin scheduler
+18:29:46 [INFO] initializing 10 user states...
+18:29:46 [INFO] entering GooseAttack phase: Increase
+18:29:46 [INFO] Telnet controller listening on: 0.0.0.0:5116
+18:29:46 [INFO] WebSocket controller listening on: 0.0.0.0:5117
+18:29:46 [INFO] launching user 1 from getversion...
+
+-------------------------------------------
+TMS Environment Map: {
+    "TMS_PUBKEY_USERID": "1",
+    "X_TMS_CLIENT_SECRET": "secret1",
+    "TMS_PUBKEY_HOST": "testhost1",
+    "TMS_PUBKEY_KEYTYPE": "ed25519",
+    "TMS_PUBKEY_FINGERPRINT": "SHA256:AhA9qIwuwh5PcT9iwQ+OrmhVWeQ31aEbl3CZOG4IxnU",
+    "TMS_PUBKEY_USER": "testhostaccount1",
+    "TMS_PARSE_RESPONSE": "true",
+    "TMS_VERBOSE": "false",
+    "X_TMS_TENANT": "test",
+    "X_TMS_CLIENT_ID": "testclient1",
+}
+-------------------------------------------
+
+18:29:47 [INFO] launching user 2 from getversion...
+18:29:48 [INFO] launching user 3 from getversion...
+18:29:49 [INFO] launching user 4 from getversion...
+18:29:49 [INFO] user 1 completed 1000 iterations of getversion...
+18:29:49 [INFO] exiting user 1 from getversion...
+18:29:50 [INFO] launching user 5 from getversion...
+18:29:50 [INFO] user 2 completed 1000 iterations of getversion...
+18:29:50 [INFO] exiting user 2 from getversion...
+18:29:51 [INFO] launching user 6 from getversion...
+18:29:51 [INFO] user 3 completed 1000 iterations of getversion...
+18:29:51 [INFO] exiting user 3 from getversion...
+18:29:52 [INFO] launching user 7 from getversion...
+18:29:52 [INFO] user 4 completed 1000 iterations of getversion...
+18:29:52 [INFO] exiting user 4 from getversion...
+18:29:53 [INFO] launching user 8 from getversion...
+18:29:53 [INFO] user 5 completed 1000 iterations of getversion...
+18:29:53 [INFO] exiting user 5 from getversion...
+18:29:54 [INFO] launching user 9 from getversion...
+18:29:54 [INFO] user 6 completed 1000 iterations of getversion...
+18:29:54 [INFO] exiting user 6 from getversion...
+18:29:55 [INFO] launching user 10 from getversion...
+18:29:55 [INFO] user 7 completed 1000 iterations of getversion...
+18:29:55 [INFO] exiting user 7 from getversion...
+10 users hatched.
+18:29:56 [INFO] entering GooseAttack phase: Maintain
+18:29:56 [INFO] user 8 completed 1000 iterations of getversion...
+18:29:56 [INFO] exiting user 8 from getversion...
+18:29:57 [INFO] user 9 completed 1000 iterations of getversion...
+18:29:57 [INFO] exiting user 9 from getversion...
+18:29:58 [INFO] user 10 completed 1000 iterations of getversion...
+18:29:58 [INFO] exiting user 10 from getversion...
+18:29:58 [INFO] entering GooseAttack phase: Decrease
+18:29:58 [INFO] failed to tell user 0 to exit: sending on a closed channel
+18:29:58 [INFO] entering GooseAttack phase: Shutdown
+18:29:58 [INFO] printing final metrics after 13 seconds...
+
+ === PER SCENARIO METRICS ===
+ ------------------------------------------------------------------------------
+ Name                     |  # users |  # times run | scenarios/s | iterations
+ ------------------------------------------------------------------------------
+ 1: getclient             |        0 |            0 |        0.00 |        NaN
+ 2: createkey             |        0 |            0 |        0.00 |        NaN
+ 3: getversion            |       10 |        10000 |      769.23 |       1000
+ 4: getkey                |        0 |            0 |        0.00 |        NaN
+ -------------------------+----------+--------------+-------------+------------
+ Aggregated               |       10 |        10000 |      769.23 |       1000
+ ------------------------------------------------------------------------------
+ Name                     |    Avg (ms) |        Min |         Max |     Median
+ ------------------------------------------------------------------------------
+   1: getclient           |        0.00 |          0 |           0 |          0
+   2: createkey           |        0.00 |          0 |           0 |          0
+   3: getversion          |        2.60 |          2 |          28 |          3
+   4: getkey              |        0.00 |          0 |           0 |          0
+ -------------------------+-------------+------------+-------------+-----------
+ Aggregated               |        2.60 |          2 |          28 |          3
+
+ === PER TRANSACTION METRICS ===
+ ------------------------------------------------------------------------------
+ Name                     |   # times run |        # fails |  trans/s |  fail/s
+ ------------------------------------------------------------------------------
+ 1: getclient            
+   1:                     |             0 |         0 (0%) |     0.00 |    0.00
+ 2: createkey            
+   1:                     |             0 |         0 (0%) |     0.00 |    0.00
+ 3: getversion           
+   1:                     |        10,000 |         0 (0%) |   769.23 |    0.00
+ 4: getkey               
+   1:                     |             0 |         0 (0%) |     0.00 |    0.00
+ -------------------------+---------------+----------------+----------+--------
+ Aggregated               |        10,000 |         0 (0%) |   769.23 |    0.00
+ ------------------------------------------------------------------------------
+ Name                     |    Avg (ms) |        Min |         Max |     Median
+ ------------------------------------------------------------------------------
+ 1: getclient            
+   1:                     |        0.00 |          0 |           0 |          0
+ 2: createkey            
+   1:                     |        0.00 |          0 |           0 |          0
+ 3: getversion           
+   1:                     |        2.59 |          2 |          28 |          3
+ 4: getkey               
+   1:                     |        0.00 |          0 |           0 |          0
+ -------------------------+-------------+------------+-------------+-----------
+ Aggregated               |        2.59 |          2 |          28 |          3
+
+ === PER REQUEST METRICS ===
+ ------------------------------------------------------------------------------
+ Name                     |        # reqs |        # fails |    req/s |  fail/s
+ ------------------------------------------------------------------------------
+ GET v1/tms/version       |        10,000 |         0 (0%) |   769.23 |    0.00
+ ------------------------------------------------------------------------------
+ Name                     |    Avg (ms) |        Min |         Max |     Median
+ ------------------------------------------------------------------------------
+ GET v1/tms/version       |        2.52 |          2 |          28 |          2
+ ------------------------------------------------------------------------------
+ Slowest page load within specified percentile of requests (in ms):
+ ------------------------------------------------------------------------------
+ Name                     |    50% |    75% |    98% |    99% |  99.9% | 99.99%
+ ------------------------------------------------------------------------------
+ GET v1/tms/version       |      2 |      3 |      4 |      4 |      6 |      7
+ ------------------------------------------------------------------------------
+ Name                     |                                        Status codes 
+ ------------------------------------------------------------------------------
+ GET v1/tms/version       |                                        10,000 [200]
+ -------------------------+----------------------------------------------------
+ Aggregated               |                                        10,000 [200] 
+
+ === OVERVIEW ===
+ ------------------------------------------------------------------------------
+ Action       Started               Stopped             Elapsed    Users
+ ------------------------------------------------------------------------------
+ Increasing:  2026-04-29 13:29:46 - 2026-04-29 13:29:56 (00:00:10, 0 -> 10)
+ Maintaining: 2026-04-29 13:29:56 - 2026-04-29 13:29:58 (00:00:02, 10)
+ Canceling:   2026-04-29 13:29:58 - 2026-04-29 13:29:58 (00:00:00, 0 <- 10)
+
+ Target host: https://tms-server-dev.tacc.utexas.edu:3000/
+ goose v0.17.2
+ ------------------------------------------------------------------------------
