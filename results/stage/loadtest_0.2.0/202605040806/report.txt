@@ -1,0 +1,9 @@
+Run folder: loadtest_results/202605040806
+Total runs: 4
+
+[PASS] smoke/getversion users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202605040806/smoke/getversion_u1_i100.log
+[PASS] smoke/getclient users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202605040806/smoke/getclient_u1_i100.log
+[Fail-100.00%] smoke/getkey users=1, iters=100 reqs=100 fails=100  log=loadtest_results/202605040806/smoke/getkey_u1_i100.log
+[PASS] smoke/createkey users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202605040806/smoke/createkey_u1_i100.log
+
+OVERALL: FAIL

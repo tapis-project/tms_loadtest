@@ -1,0 +1,6 @@
+Run folder: loadtest_results/202605040824
+Total runs: 1
+
+[PASS] smoke/createkey users=1, iters=100 reqs=100 fails=0  log=loadtest_results/202605040824/smoke/createkey_u1_i100.log
+
+OVERALL: PASS
