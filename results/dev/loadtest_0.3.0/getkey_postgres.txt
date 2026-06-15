@@ -1,0 +1,30 @@
+Getkey loadtest, TMS version 0.3.0 (postgres)
+Uses the rust crate "goose" - https://docs.rs/goose/latest/goose/
+Total number of keys created: 220024
+
+Results for getkey load test
+===============================
+
+Total number of failed requests: 0
+
+NumUsers = Number of simultaneous client users generating requests.
+
+For each case the total number of iterations was 1,000. E.g., for NumUsers = 100 a total of 100,000 requests were made.
+
+Response time per request (in milliseconds) and total throughtput in requests per second (RPS)
+----------------------------------------------------------------------
+ NumUsers | Avg (ms) |  Min (ms) |  Max (ms) |  Median (ms) |  RPS
+----------------------------------------------------------------------
+     1    |   4.12   |    3      |    30     |     4        |  200
+----------------------------------------------------------------------
+     5    |   5.01   |    3      |    38     |     5        |  500
+----------------------------------------------------------------------
+    10    |   4.13   |    3      |    25     |     4        |  714
+----------------------------------------------------------------------
+    25    |   3.88   |    2      |    28     |     4        |  862
+----------------------------------------------------------------------
+    50    |   3.83   |    2      |    28     |     4        |  926
+----------------------------------------------------------------------
+   100    |   3.73   |    2      |    27     |     4        |  962
+----------------------------------------------------------------------
+
